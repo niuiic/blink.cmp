@@ -5,15 +5,12 @@ function keymap.setup()
   local mappings = vim.deepcopy(require('blink.cmp.config').keymap)
 
   -- Handle preset
+  if mappings.preset and #vim.tbl_values(mappings) == 1 then
+    mappings = require('blink.cmp.keymap.presets').get(mappings.preset)
+  end
   if mappings.preset then
-    local preset_keymap = require('blink.cmp.keymap.presets').get(mappings.preset)
-
     -- Remove 'preset' key from opts to prevent it from being treated as a keymap
     mappings.preset = nil
-
-    -- Merge the preset keymap with the user-defined keymaps
-    -- User-defined keymaps overwrite the preset keymaps
-    mappings = vim.tbl_extend('force', preset_keymap, mappings)
   end
 
   -- We set on the buffer directly to avoid buffer-local keymaps (such as from autopairs)
